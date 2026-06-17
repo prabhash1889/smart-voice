@@ -25,17 +25,37 @@ class ConfigStore:
         with self.default_path.open("r", encoding="utf-8") as file:
             defaults = json.load(file)
 
-        if not self.config_path.exists():
+        config_path = self._active_config_path()
+        if not config_path.exists():
             return defaults
 
-        with self.config_path.open("r", encoding="utf-8") as file:
+        with config_path.open("r", encoding="utf-8") as file:
             user_config = json.load(file)
         return self._normalize(self.merge(defaults, user_config), defaults)
 
+    def _active_config_path(self) -> Path:
+        fallback_path = Path.cwd() / ".smartvoice" / "config.json"
+        if not fallback_path.exists():
+            return self.config_path
+        if not self.config_path.exists():
+            return fallback_path
+        try:
+            if fallback_path.stat().st_mtime > self.config_path.stat().st_mtime:
+                return fallback_path
+        except OSError:
+            return self.config_path
+        return self.config_path
+
     def save(self, config: dict) -> None:
         self._ensure_parent()
-        with self.config_path.open("w", encoding="utf-8") as file:
-            json.dump(config, file, indent=2)
+        try:
+            with self.config_path.open("w", encoding="utf-8") as file:
+                json.dump(config, file, indent=2)
+        except PermissionError:
+            self.config_path = Path.cwd() / ".smartvoice" / "config.json"
+            self.config_path.parent.mkdir(parents=True, exist_ok=True)
+            with self.config_path.open("w", encoding="utf-8") as file:
+                json.dump(config, file, indent=2)
 
     def _ensure_parent(self) -> None:
         try:

@@ -174,26 +174,29 @@ def main() -> int:
         print(row["final_text"])
         return 0
 
-    default_override = {}
-    if args.device is not None:
-        default_override.setdefault("audio", {})["input_device_id"] = args.device
-    if args.vad is not None and args.set_defaults:
-        default_override.setdefault("audio", {})["vad_enabled"] = args.vad == "on"
-    if args.model is not None and args.set_defaults:
-        default_override.setdefault("transcription", {})["model"] = args.model
-    if args.beam_size is not None and args.set_defaults:
-        default_override.setdefault("transcription", {})["beam_size"] = args.beam_size
-    if args.engine is not None and args.set_defaults:
-        default_override.setdefault("transcription", {})["engine"] = args.engine
-    if args.openai_model is not None and args.set_defaults:
-        default_override.setdefault("transcription", {})["openai_model"] = args.openai_model
-    if args.mode is not None and args.set_defaults:
-        default_override.setdefault("modes", {})["default"] = args.mode
-    if args.allow_cloud_transcription and args.set_defaults:
-        default_override.setdefault("privacy", {})["allow_cloud_transcription"] = True
-    if default_override:
-        config_store.update(default_override)
-        logging.info("Saved default settings.")
+    if args.set_defaults:
+        default_override = {}
+        if args.device is not None:
+            default_override.setdefault("audio", {})["input_device_id"] = args.device
+        if args.vad is not None:
+            default_override.setdefault("audio", {})["vad_enabled"] = args.vad == "on"
+        if args.model is not None:
+            default_override.setdefault("transcription", {})["model"] = args.model
+        if args.beam_size is not None:
+            default_override.setdefault("transcription", {})["beam_size"] = args.beam_size
+        if args.engine is not None:
+            default_override.setdefault("transcription", {})["engine"] = args.engine
+        if args.openai_model is not None:
+            default_override.setdefault("transcription", {})["openai_model"] = args.openai_model
+        if args.mode is not None:
+            default_override.setdefault("modes", {})["default"] = args.mode
+        if args.allow_cloud_transcription:
+            default_override.setdefault("privacy", {})["allow_cloud_transcription"] = True
+        if default_override:
+            config_store.update(default_override)
+            logging.info("Saved default settings.")
+        if not args.once and not args.tray:
+            return 0
 
     override = {}
     if args.device is not None:
@@ -228,12 +231,16 @@ def main() -> int:
     if args.save_audio:
         audio_debug_path = str(Path.cwd() / ".smartvoice" / "last_recording.wav")
 
-    app = build_app(
-        inject=not args.no_inject,
-        mode=args.mode,
-        config_override=override,
-        audio_debug_path=audio_debug_path,
-    )
+    try:
+        app = build_app(
+            inject=not args.no_inject,
+            mode=args.mode,
+            config_override=override,
+            audio_debug_path=audio_debug_path,
+        )
+    except Exception as exc:
+        print(f"Error: {exc}")
+        return 1
     if args.tray:
         from smartvoice.ui.tray import run_tray
 
