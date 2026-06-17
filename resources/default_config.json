@@ -1,0 +1,64 @@
+{
+  "app": {
+    "start_on_login": false,
+    "show_status_overlay": true,
+    "max_recording_seconds": 60
+  },
+  "privacy": {
+    "retain_audio": false,
+    "retain_history": true,
+    "history_limit": 100,
+    "allow_cloud_transcription": false,
+    "allow_cloud_cleanup": false,
+    "restore_clipboard_after_paste": true
+  },
+  "audio": {
+    "input_device_id": null,
+    "sample_rate": 16000,
+    "channels": 1,
+    "vad_enabled": true,
+    "stop_tail_ms": 350
+  },
+  "hotkeys": {
+    "push_to_talk": "ctrl+alt+space",
+    "cancel": "esc",
+    "cycle_mode": "ctrl+alt+m",
+    "open_history": "ctrl+alt+h",
+    "retry_injection": "ctrl+alt+r"
+  },
+  "transcription": {
+    "engine": "faster_whisper",
+    "model": "small.en",
+    "openai_model": "gpt-4o-transcribe",
+    "model_path": null,
+    "device": "cpu",
+    "compute_type": "int8",
+    "language": "en",
+    "beam_size": 5
+  },
+  "cleanup": {
+    "enabled": true,
+    "provider": "none",
+    "model": null,
+    "timeout_seconds": 15
+  },
+  "injection": {
+    "method": "clipboard_paste",
+    "paste_delay_ms": 80,
+    "restore_delay_ms": 200,
+    "strip_trailing_newline": true,
+    "terminal_requires_confirmation": true
+  },
+  "modes": {
+    "default": "coding_prompt",
+    "available": [
+      "raw_transcript",
+      "clean_grammar",
+      "coding_prompt",
+      "documentation",
+      "commit_message",
+      "terminal_command_explanation",
+      "competitive_programming_explanation"
+    ]
+  }
+}

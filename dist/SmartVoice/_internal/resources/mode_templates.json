@@ -1,0 +1,37 @@
+{
+  "raw_transcript": {
+    "description": "Return the transcript with only whitespace trimmed.",
+    "prefix": "",
+    "suffix": ""
+  },
+  "clean_grammar": {
+    "description": "Clean up dictated prose without changing intent.",
+    "prefix": "",
+    "suffix": ""
+  },
+  "coding_prompt": {
+    "description": "Format transcript as a concise AI coding instruction.",
+    "prefix": "Task: ",
+    "suffix": ""
+  },
+  "documentation": {
+    "description": "Format transcript as clear documentation prose.",
+    "prefix": "",
+    "suffix": ""
+  },
+  "commit_message": {
+    "description": "Format transcript as a concise commit message.",
+    "prefix": "chore: ",
+    "suffix": ""
+  },
+  "terminal_command_explanation": {
+    "description": "Format transcript as a terminal command request.",
+    "prefix": "Command request: ",
+    "suffix": ""
+  },
+  "competitive_programming_explanation": {
+    "description": "Format transcript as competitive programming notes.",
+    "prefix": "Approach: ",
+    "suffix": ""
+  }
+}
